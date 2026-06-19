@@ -1,0 +1,675 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Company Attendance Portal</title>
+    <meta name="description" content="Mobile-ready attendance management portal for employees and company administrators." />
+    <meta name="theme-color" content="#ce3128" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Attendance" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="assets/icon-192.png" />
+    <link rel="icon" href="assets/crmdigitalinc-fav.png" />
+    <link rel="stylesheet" href="styles.css?v=25" />
+  </head>
+  <body>
+    <div class="app">
+      <section class="login-screen" id="loginView">
+        <div class="login-visual">
+          <img src="assets/hero-image.jpg" alt="Office attendance workflow" />
+          <div class="visual-caption">
+            <span class="caption-kicker">CRM Digital Inc. Web Design and SEO</span>
+            <h1>Daily timekeeping, leave control, and team records in one place.</h1>
+          </div>
+        </div>
+
+        <div class="login-panel">
+          <div class="brand">
+            <span class="brand-mark">
+              <img src="assets/crmdigitalinc-fav.png" alt="CRM Digital Inc. logo" />
+            </span>
+            <div>
+              <p class="brand-name">CRM Digital Inc. Web Design and SEO</p>
+              <p class="brand-subtitle">Secure company access</p>
+            </div>
+          </div>
+
+          <form class="login-form" id="loginForm">
+            <label>
+              Username or email
+              <input id="loginEmail" type="text" autocomplete="username" placeholder="name@company.com or username" required />
+            </label>
+            <label>
+              Password
+              <span class="password-control">
+                <input id="loginPassword" type="password" autocomplete="current-password" required />
+                <button
+                  class="password-toggle"
+                  id="loginPasswordToggle"
+                  type="button"
+                  aria-label="Show password"
+                  aria-pressed="false"
+                  title="Show password"
+                >
+                  <svg class="eye-icon eye-open" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z" />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
+                  <svg class="eye-icon eye-closed" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M3 3l18 18" />
+                    <path d="M10.7 5.2A10.5 10.5 0 0 1 12 5c6 0 9.5 7 9.5 7a16.9 16.9 0 0 1-2.4 3.4" />
+                    <path d="M6.5 6.5C3.9 8.2 2.5 12 2.5 12s3.5 7 9.5 7c1.8 0 3.4-.6 4.7-1.4" />
+                    <path d="M9.9 9.9A3 3 0 0 0 14.1 14.1" />
+                  </svg>
+                </button>
+              </span>
+            </label>
+            <p class="form-error" id="loginError" role="alert"></p>
+            <button class="text-button" id="forgotPasswordButton" type="button">Forgot password?</button>
+            <button class="primary full" type="submit">Sign in</button>
+          </form>
+
+          <button class="secondary full install-trigger" type="button" data-install-open>
+            Install mobile app
+          </button>
+        </div>
+      </section>
+
+      <section class="workspace hidden" id="appView">
+        <aside class="sidebar">
+          <div class="brand compact">
+            <span class="brand-mark">
+              <img src="assets/crmdigitalinc-fav.png" alt="CRM Digital Inc. logo" />
+            </span>
+            <div>
+              <p class="brand-name">Attendance</p>
+              <p class="brand-subtitle" id="roleLabel">Portal</p>
+            </div>
+          </div>
+
+          <nav class="side-nav" aria-label="Main navigation">
+            <button class="nav-item employee-only active" type="button" data-view="employeeDashboard">
+              Dashboard
+            </button>
+            <button class="nav-item employee-only" type="button" data-view="employeeLeave">
+              File Leave
+            </button>
+            <button class="nav-item employee-only" type="button" data-view="employeeProfile">
+              My Details
+            </button>
+
+            <button class="nav-item boss-only active" type="button" data-view="bossOverview">
+              Dashboard
+            </button>
+            <button class="nav-item boss-only" type="button" data-view="bossProfile">
+              My Profile
+            </button>
+            <button class="nav-item boss-only" type="button" data-view="bossAttendance">
+              Attendance Checker
+            </button>
+            <button class="nav-item boss-only" type="button" data-view="bossLeaves">
+              Leave Approval
+            </button>
+            <button class="nav-item boss-only" type="button" data-view="bossPeople">
+              Employee Records
+            </button>
+            <button class="nav-item boss-only" type="button" data-view="bossHolidays">
+              Holiday Blocking
+            </button>
+          </nav>
+
+          <button class="ghost logout-button" type="button" id="logoutButton" data-logout>Sign out</button>
+        </aside>
+
+        <main class="main">
+          <header class="topbar">
+            <div>
+              <p class="eyebrow" id="todayLabel">Today</p>
+              <h2 id="pageTitle">Dashboard</h2>
+            </div>
+            <div class="topbar-actions">
+              <button class="secondary install-trigger" type="button" data-install-open>Install</button>
+              <div class="user-chip">
+                <span class="avatar" id="userInitials">CRM</span>
+                <div>
+                  <strong id="currentUserName">User</strong>
+                  <span id="currentUserMeta">Portal access</span>
+                </div>
+              </div>
+            </div>
+          </header>
+
+          <div class="mobile-app-banner" id="mobileAppBanner">
+            <div>
+              <strong>Attendance app ready</strong>
+              <span id="installStatus">Open from your home screen after installation.</span>
+            </div>
+            <button class="secondary" type="button" data-install-open>Install</button>
+          </div>
+
+          <section class="content-view active" id="employeeDashboard">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">Employee dashboard</p>
+                <h1 id="employeeGreeting">Good day</h1>
+              </div>
+              <span class="status-pill" id="todayWorkStatus">Ready</span>
+            </div>
+
+            <div class="grid two">
+              <article class="module time-module">
+                <div class="module-header">
+                  <div>
+                    <p class="eyebrow">Today</p>
+                    <h2>Time in and out</h2>
+                  </div>
+                  <span class="clock" id="liveClock">--:--</span>
+                </div>
+                <div id="employeeTimeCard"></div>
+              </article>
+
+              <article class="module">
+                <div class="module-header">
+                  <div>
+                    <p class="eyebrow">This month</p>
+                    <h2>Attendance snapshot</h2>
+                  </div>
+                </div>
+                <div class="stat-grid" id="employeeStats"></div>
+              </article>
+            </div>
+
+            <article class="module">
+              <div class="module-header">
+                <div>
+                  <p class="eyebrow">History</p>
+                  <h2>Recent attendance</h2>
+                </div>
+              </div>
+              <div id="employeeRecentLogs"></div>
+            </article>
+          </section>
+
+          <section class="content-view" id="employeeLeave">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">Leave filing</p>
+                <h1>Submit leave request</h1>
+              </div>
+            </div>
+
+            <div class="grid two">
+              <form class="module form-grid" id="leaveForm">
+                <label>
+                  Leave type
+                  <select id="leaveType" required>
+                    <option value="Vacation leave">Vacation leave</option>
+                    <option value="Sick leave">Sick leave</option>
+                    <option value="Emergency leave">Emergency leave</option>
+                    <option value="Birthday leave">Birthday leave</option>
+                  </select>
+                </label>
+                <label>
+                  Start date
+                  <input id="leaveStart" type="date" required />
+                </label>
+                <label>
+                  End date
+                  <input id="leaveEnd" type="date" required />
+                </label>
+                <label class="span-full">
+                  Reason
+                  <textarea id="leaveReason" rows="4" required></textarea>
+                </label>
+                <p class="form-error span-full" id="leaveError" role="alert"></p>
+                <button class="primary" type="submit">Submit request</button>
+              </form>
+
+              <article class="module">
+                <div class="module-header">
+                  <div>
+                    <p class="eyebrow">Calendar</p>
+                    <h2>Blocked holidays</h2>
+                  </div>
+                </div>
+                <div id="employeeHolidayList"></div>
+              </article>
+            </div>
+
+            <article class="module">
+              <div class="module-header">
+                <div>
+                  <p class="eyebrow">Requests</p>
+                  <h2>My leave records</h2>
+                </div>
+              </div>
+              <div id="employeeLeaveList"></div>
+            </article>
+          </section>
+
+          <section class="content-view" id="employeeProfile">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">Employee details</p>
+                <h1>My company record</h1>
+              </div>
+              <button class="secondary" type="button" data-scroll-target="employeeProfileEditor">Edit profile</button>
+            </div>
+            <div class="grid two">
+              <article class="module" id="employeeProfileCard"></article>
+              <article class="module">
+                <div class="module-header">
+                  <div>
+                    <p class="eyebrow">Personal milestones</p>
+                    <h2>Birthday and tenure</h2>
+                  </div>
+                </div>
+                <div id="employeeMilestones"></div>
+              </article>
+              <article class="module profile-editor span-full" id="employeeProfileEditor"></article>
+            </div>
+          </section>
+
+          <section class="content-view" id="bossOverview">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">Backend</p>
+                <h1>Company attendance control</h1>
+              </div>
+              <button class="secondary" type="button" data-view="bossAttendance">Check attendance</button>
+            </div>
+
+            <div class="stat-grid wide" id="bossStats"></div>
+
+            <div class="grid two">
+              <article class="module">
+                <div class="module-header">
+                  <div>
+                    <p class="eyebrow">Needs action</p>
+                    <h2>Pending leave approvals</h2>
+                  </div>
+                </div>
+                <div id="bossPendingPreview"></div>
+              </article>
+
+              <article class="module">
+                <div class="module-header">
+                  <div>
+                    <p class="eyebrow">People</p>
+                    <h2>Upcoming birthdays</h2>
+                  </div>
+                </div>
+                <div id="bossBirthdayList"></div>
+              </article>
+            </div>
+          </section>
+
+          <section class="content-view" id="bossProfile">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">My Profile</p>
+                <h1>My company record</h1>
+              </div>
+            </div>
+
+            <div class="grid two">
+              <article class="module" id="bossProfileCard"></article>
+              <article class="module profile-editor" id="bossProfileEditor"></article>
+            </div>
+          </section>
+
+          <section class="content-view" id="bossAttendance">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">Attendance checker</p>
+                <h1>Daily time records</h1>
+              </div>
+            </div>
+
+            <article class="module">
+              <div class="toolbar">
+                <label>
+                  Date
+                  <input id="bossAttendanceDate" type="date" />
+                </label>
+                <label>
+                  Search
+                  <input id="bossAttendanceSearch" type="search" placeholder="Name or department" />
+                </label>
+              </div>
+              <div id="bossAttendanceTable"></div>
+            </article>
+          </section>
+
+          <section class="content-view" id="bossEmployeeAttendance">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">Employee attendance</p>
+                <h1 id="bossEmployeeAttendanceName">Attendance records</h1>
+                <p class="heading-note" id="bossEmployeeAttendanceMeta"></p>
+              </div>
+              <button class="secondary" type="button" data-view="bossAttendance">Back to daily records</button>
+            </div>
+
+            <div class="stat-grid wide" id="bossEmployeeAttendanceStats"></div>
+
+            <article class="module">
+              <div id="bossEmployeeAttendanceTable"></div>
+            </article>
+          </section>
+
+          <section class="content-view" id="bossLeaves">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">Leave approval</p>
+                <h1>Review employee requests</h1>
+              </div>
+            </div>
+
+            <div class="grid two">
+              <article class="module">
+                <div class="module-header">
+                  <div>
+                    <p class="eyebrow">Queue</p>
+                    <h2>Pending requests</h2>
+                  </div>
+                </div>
+                <div id="bossPendingLeaves"></div>
+              </article>
+
+              <article class="module">
+                <div class="module-header">
+                  <div>
+                    <p class="eyebrow">History</p>
+                    <h2>Approved and rejected</h2>
+                  </div>
+                </div>
+                <div id="bossLeaveHistory"></div>
+              </article>
+            </div>
+          </section>
+
+          <section class="content-view" id="bossPeople">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">Employee records</p>
+                <h1>People, birthdays, and details</h1>
+              </div>
+            </div>
+
+            <div class="grid two">
+              <article class="module">
+                <div class="module-header">
+                  <div>
+                    <p class="eyebrow">Directory</p>
+                    <h2>Employees</h2>
+                  </div>
+                </div>
+                <label class="search-field">
+                  Search employees
+                  <input id="bossEmployeeSearch" type="search" placeholder="Name, department, position" />
+                </label>
+                <div id="bossEmployeeTable"></div>
+              </article>
+
+              <form class="module form-grid" id="employeeForm">
+                <div class="module-header span-full">
+                  <div>
+                    <p class="eyebrow">Add access</p>
+                    <h2>New employee</h2>
+                  </div>
+                </div>
+                <label>
+                  Full name
+                  <input id="newEmployeeName" required />
+                </label>
+                <label>
+                  Email
+                  <input id="newEmployeeEmail" type="email" required />
+                </label>
+                <label>
+                  Password
+                  <input id="newEmployeePassword" type="text" value="employee123" required />
+                </label>
+                <label>
+                  Department
+                  <input id="newEmployeeDepartment" required />
+                </label>
+                <label>
+                  Position
+                  <input id="newEmployeePosition" required />
+                </label>
+                <label>
+                  Birthday
+                  <input id="newEmployeeBirthday" type="date" required />
+                </label>
+                <label>
+                  Phone
+                  <input id="newEmployeePhone" required />
+                </label>
+                <label>
+                  Emergency contact
+                  <input id="newEmployeeEmergency" required />
+                </label>
+                <p class="form-error span-full" id="employeeFormError" role="alert"></p>
+                <button class="primary" type="submit">Add employee</button>
+              </form>
+
+              <form class="module form-grid span-full hidden" id="employeeEditorForm">
+                <div class="module-header span-full">
+                  <div>
+                    <p class="eyebrow">Master admin</p>
+                    <h2 id="employeeEditorTitle">Edit employee</h2>
+                  </div>
+                  <button class="ghost" type="button" id="cancelEmployeeEditButton">Cancel</button>
+                </div>
+                <input id="editEmployeeId" type="hidden" />
+                <label>
+                  Full name
+                  <input id="editEmployeeName" required />
+                </label>
+                <label>
+                  Username
+                  <input id="editEmployeeUsername" required />
+                </label>
+                <label>
+                  Email
+                  <input id="editEmployeeEmail" type="email" required />
+                </label>
+                <label>
+                  Department
+                  <input id="editEmployeeDepartment" required />
+                </label>
+                <label>
+                  Position
+                  <input id="editEmployeePosition" required />
+                </label>
+                <label>
+                  Birthday
+                  <input id="editEmployeeBirthday" type="date" required />
+                </label>
+                <label>
+                  Phone
+                  <input id="editEmployeePhone" required />
+                </label>
+                <label>
+                  Emergency contact
+                  <input id="editEmployeeEmergency" required />
+                </label>
+                <label>
+                  Start date
+                  <input id="editEmployeeStartDate" type="date" required />
+                </label>
+                <label>
+                  Status
+                  <select id="editEmployeeStatus">
+                    <option value="Active">Active</option>
+                    <option value="Inactive">Inactive</option>
+                  </select>
+                </label>
+                <label>
+                  New password
+                  <span class="password-control">
+                    <input id="editEmployeePassword" type="password" autocomplete="new-password" minlength="6" />
+                    <button class="password-toggle" type="button" data-toggle-password aria-label="Show password" aria-pressed="false" title="Show password">
+                      <svg class="eye-icon eye-open" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z" />
+                        <circle cx="12" cy="12" r="3" />
+                      </svg>
+                      <svg class="eye-icon eye-closed" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M3 3l18 18" />
+                        <path d="M10.7 5.2A10.5 10.5 0 0 1 12 5c6 0 9.5 7 9.5 7a16.9 16.9 0 0 1-2.4 3.4" />
+                        <path d="M6.5 6.5C3.9 8.2 2.5 12 2.5 12s3.5 7 9.5 7c1.8 0 3.4-.6 4.7-1.4" />
+                        <path d="M9.9 9.9A3 3 0 0 0 14.1 14.1" />
+                      </svg>
+                    </button>
+                  </span>
+                </label>
+                <label>
+                  Confirm new password
+                  <span class="password-control">
+                    <input id="editEmployeeConfirmPassword" type="password" autocomplete="new-password" minlength="6" />
+                    <button class="password-toggle" type="button" data-toggle-password aria-label="Show password" aria-pressed="false" title="Show password">
+                      <svg class="eye-icon eye-open" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z" />
+                        <circle cx="12" cy="12" r="3" />
+                      </svg>
+                      <svg class="eye-icon eye-closed" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M3 3l18 18" />
+                        <path d="M10.7 5.2A10.5 10.5 0 0 1 12 5c6 0 9.5 7 9.5 7a16.9 16.9 0 0 1-2.4 3.4" />
+                        <path d="M6.5 6.5C3.9 8.2 2.5 12 2.5 12s3.5 7 9.5 7c1.8 0 3.4-.6 4.7-1.4" />
+                        <path d="M9.9 9.9A3 3 0 0 0 14.1 14.1" />
+                      </svg>
+                    </button>
+                  </span>
+                </label>
+                <p class="note span-full">Leave the password fields blank if you only want to update profile details. After a password reset, open the prepared email draft and send it to the employee.</p>
+                <p class="form-error span-full" id="employeeEditorError" role="alert"></p>
+                <div class="forgot-result span-full hidden" id="employeeEditorResult"></div>
+                <button class="primary" type="submit">Save employee details</button>
+              </form>
+            </div>
+          </section>
+
+          <section class="content-view" id="bossHolidays">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">Holiday blocking</p>
+                <h1>Closed work dates</h1>
+              </div>
+            </div>
+
+            <div class="grid two">
+              <form class="module form-grid" id="holidayForm">
+                <div class="module-header span-full">
+                  <div>
+                    <p class="eyebrow">Calendar control</p>
+                    <h2>Add blocked holiday</h2>
+                  </div>
+                </div>
+                <label>
+                  Date
+                  <input id="holidayDate" type="date" required />
+                </label>
+                <label>
+                  Holiday name
+                  <input id="holidayName" required />
+                </label>
+                <label class="span-full">
+                  Type
+                  <select id="holidayType" required>
+                    <option value="Regular holiday">Regular holiday</option>
+                    <option value="Company holiday">Company holiday</option>
+                    <option value="Special non-working day">Special non-working day</option>
+                  </select>
+                </label>
+                <p class="form-error span-full" id="holidayError" role="alert"></p>
+                <button class="primary" type="submit">Block date</button>
+              </form>
+
+              <article class="module">
+                <div class="module-header">
+                  <div>
+                    <p class="eyebrow">Blocked dates</p>
+                    <h2>Holiday list</h2>
+                  </div>
+                </div>
+                <div id="bossHolidayList"></div>
+              </article>
+            </div>
+          </section>
+        </main>
+
+        <button class="ghost logout-button mobile-logout-button" type="button" data-logout>Sign out</button>
+      </section>
+
+      <div class="install-sheet hidden" id="installSheet" aria-hidden="true">
+        <div class="install-card" role="dialog" aria-modal="true" aria-labelledby="installTitle">
+          <div class="module-header">
+            <div>
+              <p class="eyebrow">Mobile access</p>
+              <h2 id="installTitle">Install Attendance</h2>
+            </div>
+            <button class="ghost icon-button" type="button" id="closeInstallSheet" aria-label="Close install panel">
+              X
+            </button>
+          </div>
+          <div>
+            <p class="note" id="installHelp">
+              Android Chrome can install this as an app. On iPhone, use Share, then Add to Home Screen.
+            </p>
+            <div class="install-steps">
+              <div class="detail-row">
+                <span>Android</span>
+                <strong>Tap Install, then confirm.</strong>
+              </div>
+              <div class="detail-row">
+                <span>iPhone</span>
+                <strong>Share, then Add to Home Screen.</strong>
+              </div>
+            </div>
+            <div class="row-actions install-actions">
+              <button class="primary" type="button" id="installNowButton">Install now</button>
+              <button class="ghost" type="button" id="dismissInstallButton">Not now</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="install-sheet hidden" id="forgotPasswordSheet" aria-hidden="true">
+        <div class="install-card" role="dialog" aria-modal="true" aria-labelledby="forgotPasswordTitle">
+          <div class="module-header">
+            <div>
+              <p class="eyebrow">Account recovery</p>
+              <h2 id="forgotPasswordTitle">Forgot password</h2>
+            </div>
+            <button class="ghost icon-button" type="button" id="closeForgotPasswordSheet" aria-label="Close forgot password panel">
+              X
+            </button>
+          </div>
+          <form class="form-grid" id="forgotPasswordForm">
+            <label class="span-full">
+              Username or email
+              <input id="forgotPasswordIdentifier" type="text" autocomplete="username" required />
+            </label>
+            <p class="note span-full">
+              This local version prepares a confirmation email draft. Automatic email sending needs a backend email service.
+            </p>
+            <p class="form-error span-full" id="forgotPasswordError" role="alert"></p>
+            <div class="forgot-result span-full hidden" id="forgotPasswordResult"></div>
+            <div class="row-actions install-actions span-full">
+              <button class="primary" type="submit">Send</button>
+              <button class="ghost" type="button" id="cancelForgotPasswordButton">Cancel</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    </div>
+
+    <script src="app.js?v=30"></script>
+  </body>
+</html>
