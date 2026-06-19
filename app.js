@@ -1,6 +1,6 @@
 const STORAGE_KEY = "company-attendance-state-v2";
 const SESSION_KEY = "company-attendance-session-v2";
-const COMPANY_TIME_ZONE = "Asia/Manila";
+const FALLBACK_TIME_ZONE = "Asia/Manila";
 const PROFILE_IMAGE_LIMIT = 1.5 * 1024 * 1024;
 
 const seedData = {
@@ -320,9 +320,13 @@ function getCurrentUser() {
   return data.employees.find((employee) => employee.id === session.id) || null;
 }
 
+function userTimeZone() {
+  return Intl.DateTimeFormat().resolvedOptions().timeZone || FALLBACK_TIME_ZONE;
+}
+
 function todayKey() {
   const parts = new Intl.DateTimeFormat("en-CA", {
-    timeZone: COMPANY_TIME_ZONE,
+    timeZone: userTimeZone(),
     year: "numeric",
     month: "2-digit",
     day: "2-digit",
@@ -334,7 +338,7 @@ function todayKey() {
 
 function currentTimeKey() {
   const parts = new Intl.DateTimeFormat("en-GB", {
-    timeZone: COMPANY_TIME_ZONE,
+    timeZone: userTimeZone(),
     hour: "2-digit",
     minute: "2-digit",
     hour12: false,
@@ -345,7 +349,7 @@ function currentTimeKey() {
 
 function currentSecondOfDay() {
   const parts = new Intl.DateTimeFormat("en-GB", {
-    timeZone: COMPANY_TIME_ZONE,
+    timeZone: userTimeZone(),
     hour: "2-digit",
     minute: "2-digit",
     second: "2-digit",
@@ -372,7 +376,7 @@ function dateLabel(dateKey, options = {}) {
 
 function longTodayLabel() {
   return new Intl.DateTimeFormat("en-US", {
-    timeZone: COMPANY_TIME_ZONE,
+    timeZone: userTimeZone(),
     weekday: "long",
     month: "long",
     day: "numeric",
@@ -962,7 +966,7 @@ function renderEmployeeProfile(employee) {
       ${detail("Birthday", birthdayLabel)}
       ${detail("Next birthday", nextBirthdayLabel)}
       ${detail("Tenure start", startDateLabel)}
-      ${detail("Company timezone", COMPANY_TIME_ZONE)}
+      ${detail("Your timezone", userTimeZone())}
     </div>
   `;
 }

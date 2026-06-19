@@ -1,9 +1,9 @@
-const CACHE_NAME = "company-attendance-pwa-v34";
+const CACHE_NAME = "company-attendance-pwa-v35";
 const APP_SHELL = [
   "./",
   "./index.html",
   "./styles.css?v=25",
-  "./app.js?v=30",
+  "./app.js?v=31",
   "./manifest.webmanifest",
   "./assets/attendance-workflow.png",
   "./assets/brand-mark.png",
